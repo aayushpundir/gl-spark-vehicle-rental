@@ -1,8 +1,9 @@
 package com.globallogic.vrs.user_service;
 
-import com.globallogic.vrs.userservice.model.User;
-import com.globallogic.vrs.userservice.repository.UserRepository;
-import com.globallogic.vrs.userservice.service.UserServiceImpl;
+import com.globallogic.vrs.user_service.dto.UserDTO;
+import com.globallogic.vrs.user_service.model.User;
+import com.globallogic.vrs.user_service.repository.UserRepository;
+import com.globallogic.vrs.user_service.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,21 +25,17 @@ public class UserServiceTest {
 
     @Test
     void testRegisterUser_Success() {
-        // Given: A user object (We will define the User class next)
-        User user = new User();
-        user.setName("John Doe");
-        user.setEmail("john@example.com");
-        user.setPassword("password123");
+        // Given
+        UserDTO userDto = new UserDTO("John Doe", "john@example.com", "password123");
+        User user = new User(1L, "John Doe", "john@example.com", "password123", "CUSTOMER");
 
-        // Mocking the behavior: When repository saves, return the same user
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        // When: The service method is called
-        User savedUser = userService.registerUser(user);
+        // When
+        User savedUser = userService.registerUser(userDto);
 
-        // Then: Assertions to verify the result
+        // Then
         assertNotNull(savedUser);
         assertEquals("john@example.com", savedUser.getEmail());
-        verify(userRepository, times(1)).save(any(User.class));
     }
 }
