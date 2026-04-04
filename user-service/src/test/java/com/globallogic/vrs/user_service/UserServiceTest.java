@@ -1,6 +1,7 @@
 package com.globallogic.vrs.user_service;
 
 import com.globallogic.vrs.user_service.dto.UserDTO;
+import com.globallogic.vrs.user_service.exception.UserAlreadyExistsException;
 import com.globallogic.vrs.user_service.model.User;
 import com.globallogic.vrs.user_service.repository.UserRepository;
 import com.globallogic.vrs.user_service.service.UserServiceImpl;
@@ -10,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -52,5 +55,22 @@ public class UserServiceTest {
         assertNotNull(savedUser);
         assertEquals("john@example.com", savedUser.getEmail());
         verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void testRegisterUser_DuplicateEmail_ThrowsException() {
+        // Given
+        UserDTO userDto = new UserDTO("Jane Doe", "duplicate@example.com", "password123");
+
+        // Simulate that the email already exists in the database
+        when(userRepository.findByEmail("duplicate@example.com")).thenReturn(Optional.of(new User()));
+
+        // When & Then
+        assertThrows(UserAlreadyExistsException.class, () -> {
+            userService.registerUser(userDto);
+        });
+
+        // Verify that save was NEVER called because of the duplicate
+        verify(userRepository, never()).save(any(User.class));
     }
 }

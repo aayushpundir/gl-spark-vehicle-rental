@@ -1,6 +1,7 @@
 package com.globallogic.vrs.user_service.service;
 
 import com.globallogic.vrs.user_service.dto.UserDTO;
+import com.globallogic.vrs.user_service.exception.UserAlreadyExistsException;
 import com.globallogic.vrs.user_service.model.User;
 import com.globallogic.vrs.user_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(UserDTO userDto) {
+
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("User with email " + userDto.getEmail() + " already exists!");
+        }
+
         User user = new User();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
