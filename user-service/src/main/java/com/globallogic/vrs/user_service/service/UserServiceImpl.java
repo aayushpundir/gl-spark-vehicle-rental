@@ -1,9 +1,11 @@
 package com.globallogic.vrs.user_service.service;
 
+import com.globallogic.vrs.user_service.dto.LoginRequest;
 import com.globallogic.vrs.user_service.dto.UserDTO;
 import com.globallogic.vrs.user_service.exception.UserAlreadyExistsException;
 import com.globallogic.vrs.user_service.model.User;
 import com.globallogic.vrs.user_service.repository.UserRepository;
+import com.globallogic.vrs.user_service.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Override
     public User registerUser(UserDTO userDto) {
@@ -31,5 +36,20 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(user);
 
+    }
+
+    @Override
+    public String loginUser(LoginRequest loginRequest) {
+        // 1. Find the user by email
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new RuntimeException("Invalid Email or Password"));
+
+        // 2. Check if the raw password matches the BCrypt hash in DB
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid Email or Password");
+        }
+
+        // 3. Generate and return the JWT
+        return jwtUtils.generateToken(user.getEmail());
     }
 }
