@@ -40,16 +40,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String loginUser(LoginRequest loginRequest) {
-        // 1. Find the user by email
+        // 1. Check if user exists
         User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid Email or Password"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 2. Check if the raw password matches the BCrypt hash in DB
+        // 2. Check if password matches (BCrypt)
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid Email or Password");
+            throw new RuntimeException("Invalid credentials");
         }
 
-        // 3. Generate and return the JWT
+        // 3. Generate token
         return jwtUtils.generateToken(user.getEmail());
     }
 }
