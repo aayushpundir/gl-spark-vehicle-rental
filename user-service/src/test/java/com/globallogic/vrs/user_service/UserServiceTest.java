@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -23,12 +24,16 @@ public class UserServiceTest {
     @InjectMocks
     private UserServiceImpl userService; // This will be red for now
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @Test
     void testRegisterUser_Success() {
         // Given
         UserDTO userDto = new UserDTO("John Doe", "john@example.com", "password123");
-        User user = new User(1L, "John Doe", "john@example.com", "password123", "CUSTOMER");
 
+        // Tell Mockito to return a "hashed" string when encode is called
+        when(passwordEncoder.encode(anyString())).thenReturn("hashedPassword123");
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         // When
