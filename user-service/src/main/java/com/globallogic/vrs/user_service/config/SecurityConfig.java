@@ -3,11 +3,10 @@ package com.globallogic.vrs.user_service.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
 public class SecurityConfig {
@@ -18,11 +17,26 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()) // Disable CSRF for REST APIs
+        http
+                // 1. Disable CSRF (Mandatory for Stateless JWT APIs)
+                .csrf(csrf -> csrf.disable())
+
+                // 2. Handle CORS (Optional but good for React frontend later)
+                .cors(cors -> cors.disable())
+
+                // 3. Configure Authorization
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/register", "/api/users/login").permitAll() // Allow everyone to register
+                        // Permit registration, login, and the default error path
+                        .requestMatchers("/api/users/register", "/api/users/login", "/error").permitAll()
+                        // Secure everything else
                         .anyRequest().authenticated()
+                )
+
+                // 4. Set Session Management to Stateless
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
+
         return http.build();
     }
 }
