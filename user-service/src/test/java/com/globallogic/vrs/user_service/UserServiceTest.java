@@ -29,18 +29,28 @@ public class UserServiceTest {
 
     @Test
     void testRegisterUser_Success() {
-        // Given
+        // 1. Create the DTO (Input)
         UserDTO userDto = new UserDTO("John Doe", "john@example.com", "password123");
 
-        // Tell Mockito to return a "hashed" string when encode is called
+        // 2. Create the Entity (What the DB would return)
+        User user = new User();
+        user.setId(1L);
+        user.setName("John Doe");
+        user.setEmail("john@example.com");
+        user.setPassword("hashedPassword123");
+        user.setRole("CUSTOMER");
+
+        // 3. Setup Mocks
         when(passwordEncoder.encode(anyString())).thenReturn("hashedPassword123");
+        // NOW 'user' is defined, so this line will work!
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        // When
+        // 4. When
         User savedUser = userService.registerUser(userDto);
 
-        // Then
+        // 5. Then
         assertNotNull(savedUser);
         assertEquals("john@example.com", savedUser.getEmail());
+        verify(userRepository, times(1)).save(any(User.class));
     }
 }
