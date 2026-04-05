@@ -2,7 +2,6 @@ package com.globallogic.vrs.vehicle_service.config;
 
 import com.globallogic.vrs.vehicle_service.security.JwtAuthenticationFilter;
 import jakarta.ws.rs.HttpMethod;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -21,7 +20,6 @@ public class SecurityConfig {
 
     public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
-        System.out.println("DEBUG: SecurityConfig initialized with JwtFilter!");
     }
 
     @Bean

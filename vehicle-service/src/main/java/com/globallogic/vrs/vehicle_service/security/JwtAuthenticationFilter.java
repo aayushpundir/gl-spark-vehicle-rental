@@ -41,9 +41,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // Tell Spring Security: "This user is verified and has these roles"
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                System.out.println("Extracted Email: " + email);
-                System.out.println("Extracted Role from Token: " + role);
-                System.out.println("Granted Authority: ROLE_" + role);
             }
         }
         filterChain.doFilter(request, response);

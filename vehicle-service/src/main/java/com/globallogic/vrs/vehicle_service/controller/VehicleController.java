@@ -1,7 +1,6 @@
 package com.globallogic.vrs.vehicle_service.controller;
 
 import com.globallogic.vrs.vehicle_service.dto.VehicleDTO;
-import com.globallogic.vrs.vehicle_service.model.Vehicle;
 import com.globallogic.vrs.vehicle_service.service.VehicleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
