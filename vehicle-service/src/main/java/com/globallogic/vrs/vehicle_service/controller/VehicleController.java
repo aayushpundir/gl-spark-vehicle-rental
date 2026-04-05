@@ -18,22 +18,22 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @PostMapping("/add")
-    public ResponseEntity<Vehicle> addVehicle(@Valid @RequestBody VehicleDTO vehicleDto) {
+    public ResponseEntity<VehicleDTO> addVehicle(@Valid @RequestBody VehicleDTO vehicleDto) {
         return new ResponseEntity<>(vehicleService.addVehicle(vehicleDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+    public ResponseEntity<List<VehicleDTO>> getAllVehicles() {
         return ResponseEntity.ok(vehicleService.getAllVehicles());
     }
 
-    @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<Vehicle> getVehicleById(@RequestParam("id") Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<VehicleDTO> getVehicleById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(vehicleService.getVehicleById(id));
     }
 
     @GetMapping("/available")
-    public ResponseEntity<List<Vehicle>> getAvailable() {
+    public ResponseEntity<List<VehicleDTO>> getAvailable() {
         return ResponseEntity.ok(vehicleService.getAvailableVehicles());
     }
 }

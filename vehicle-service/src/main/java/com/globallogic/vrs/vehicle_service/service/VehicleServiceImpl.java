@@ -6,6 +6,7 @@ import com.globallogic.vrs.vehicle_service.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,7 +15,7 @@ public class VehicleServiceImpl implements VehicleService{
     private VehicleRepository vehicleRepository;
 
     @Override
-    public Vehicle addVehicle(VehicleDTO vehicleDto) {
+    public VehicleDTO addVehicle(VehicleDTO vehicleDto) {
         Vehicle vehicle = new Vehicle();
         vehicle.setBrand(vehicleDto.getBrand());
         vehicle.setModel(vehicleDto.getModel());
@@ -23,22 +24,66 @@ public class VehicleServiceImpl implements VehicleService{
 
         vehicle.setStatus(vehicleDto.getStatus() != null ? vehicleDto.getStatus() : "AVAILABLE");
 
-        return vehicleRepository.save(vehicle);
+        vehicleRepository.save(vehicle);
+
+        vehicleDto.setStatus(vehicle.getStatus());
+
+        return vehicleDto;
     }
 
     @Override
-    public List<Vehicle> getAllVehicles() {
-        return vehicleRepository.findAll();
+    public List<VehicleDTO> getAllVehicles() {
+        List<Vehicle> vehicles = vehicleRepository.findAll();
+        List<VehicleDTO> vehicleDTOs = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+            VehicleDTO vehicleDTO = new VehicleDTO();
+
+            vehicleDTO.setBrand(vehicle.getBrand());
+            vehicleDTO.setModel(vehicle.getModel());
+            vehicleDTO.setPlateNumber(vehicle.getPlateNumber());
+            vehicleDTO.setPricePerDay(vehicle.getPricePerDay());
+            vehicleDTO.setStatus(vehicle.getStatus());
+
+            vehicleDTOs.add(vehicleDTO);
+        }
+
+        return vehicleDTOs;
     }
 
     @Override
-    public Vehicle getVehicleById(Long id) {
-        return vehicleRepository.findById(id)
+    public VehicleDTO getVehicleById(Long id) {
+        Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Vehicle not found with id: " + id));
+
+        VehicleDTO vehicleDTO = new VehicleDTO();
+
+        vehicleDTO.setBrand(vehicle.getBrand());
+        vehicleDTO.setModel(vehicle.getModel());
+        vehicleDTO.setPlateNumber(vehicle.getPlateNumber());
+        vehicleDTO.setPricePerDay(vehicle.getPricePerDay());
+        vehicleDTO.setStatus(vehicle.getStatus());
+
+        return vehicleDTO;
     }
 
     @Override
-    public List<Vehicle> getAvailableVehicles() {
-        return vehicleRepository.findByStatus("AVAILABLE");
+    public List<VehicleDTO> getAvailableVehicles() {
+        List<Vehicle> vehicles = vehicleRepository.findByStatus("AVAILABLE");
+
+        List<VehicleDTO> vehiclesDto = new ArrayList<>();
+        for (Vehicle vehicle : vehicles) {
+            VehicleDTO vehicleDTO = new VehicleDTO();
+
+            vehicleDTO.setBrand(vehicle.getBrand());
+            vehicleDTO.setModel(vehicle.getModel());
+            vehicleDTO.setPlateNumber(vehicle.getPlateNumber());
+            vehicleDTO.setPricePerDay(vehicle.getPricePerDay());
+            vehicleDTO.setStatus(vehicle.getStatus());
+
+            vehiclesDto.add(vehicleDTO);
+        }
+
+        return vehiclesDto;
     }
 }
