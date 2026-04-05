@@ -1,0 +1,13 @@
+package com.globallogic.vrs.vehicle_service.service;
+
+import com.globallogic.vrs.vehicle_service.dto.VehicleDTO;
+import com.globallogic.vrs.vehicle_service.model.Vehicle;
+
+import java.util.List;
+
+public interface VehicleService {
+    VehicleDTO addVehicle(VehicleDTO vehicleDto);
+    List<VehicleDTO> getAllVehicles();
+    VehicleDTO getVehicleById(Long id);
+    List<VehicleDTO> getAvailableVehicles();
+}
