@@ -1,5 +1,6 @@
 package com.globallogic.vrs.user_service.service;
 
+import com.globallogic.vrs.user_service.dto.AuthResponse;
 import com.globallogic.vrs.user_service.dto.LoginRequest;
 import com.globallogic.vrs.user_service.dto.UserDTO;
 import com.globallogic.vrs.user_service.exception.UserAlreadyExistsException;
@@ -32,14 +33,14 @@ public class UserServiceImpl implements UserService {
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRole("CUSTOMER");
+        user.setRole("ADMIN");
 
         return userRepository.save(user);
 
     }
 
     @Override
-    public String loginUser(LoginRequest loginRequest) {
+    public AuthResponse loginUser(LoginRequest loginRequest) {
         // 1. Check if user exists
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -49,7 +50,16 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        // 3. Generate token
-        return jwtUtils.generateToken(user.getEmail());
+        // 3. Generate token (ensure jwtUtils now takes two arguments: email and role)
+        String token = jwtUtils.generateToken(user.getEmail(), user.getRole());
+
+        // 4. Return the AuthResponse DTO
+        // (Assuming you have a constructor or @AllArgsConstructor on AuthResponse)
+        return new AuthResponse(
+                token,
+                user.getRole(),
+                "Bearer",
+                user.getEmail()
+        );
     }
 }

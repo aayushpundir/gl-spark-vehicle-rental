@@ -1,5 +1,6 @@
 package com.globallogic.vrs.user_service.controller;
 
+import com.globallogic.vrs.user_service.dto.AuthResponse;
 import com.globallogic.vrs.user_service.dto.LoginRequest;
 import com.globallogic.vrs.user_service.dto.UserDTO;
 import com.globallogic.vrs.user_service.model.User;
@@ -29,14 +30,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequest loginRequest) {
-        String token = userService.loginUser(loginRequest);
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        // 1. Ask the service to authenticate and give us everything we need
+        AuthResponse authResponse = userService.loginUser(loginRequest);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("token", token);
-        map.put("type", "Bearer");
-
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        // 2. Return the whole object
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
 }

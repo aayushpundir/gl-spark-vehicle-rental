@@ -20,12 +20,14 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String email) {
+    // Inside User Service JwtUtils.java
+    public String generateToken(String email, String role) {
         return Jwts.builder()
                 .subject(email)
+                .claim("role", role) // This is the "Key" the Vehicle Service looks for
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(getSigningKey(), Jwts.SIG.HS256) // Explicitly set the algorithm
+                .expiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(getSigningKey())
                 .compact();
     }
 }

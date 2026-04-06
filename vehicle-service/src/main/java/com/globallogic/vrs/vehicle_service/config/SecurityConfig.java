@@ -1,7 +1,7 @@
 package com.globallogic.vrs.vehicle_service.config;
 
 import com.globallogic.vrs.vehicle_service.security.JwtAuthenticationFilter;
-import jakarta.ws.rs.HttpMethod;
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtFilter; // <--- Inject your new filter
+    private final JwtAuthenticationFilter jwtFilter;
 
     public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
@@ -28,16 +28,21 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 1. Specific POST must come FIRST
+                        // 1. ADMIN ONLY: Writing/Deleting data
                         .requestMatchers(HttpMethod.POST, "/api/vehicles/add").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/vehicles/**").hasRole("ADMIN")
 
-                        // 2. Generic GET can be second
+                        // 2. INTERNAL/ADMIN: Updating status (The Booking Service calls this)
+                        // If Booking Service passes the Admin/Customer token, permitAll() is okay
+                        // for now, but usually, we restrict PUT to authenticated users.
+                        .requestMatchers(HttpMethod.PUT, "/api/vehicles/**").authenticated()
+
+                        // 3. PUBLIC: Browsing vehicles
                         .requestMatchers(HttpMethod.GET, "/api/vehicles/**").permitAll()
 
-                        // 3. Catch-all
+                        // 4. Catch-all
                         .anyRequest().authenticated()
                 )
-                // 4. IMPORTANT: The filter MUST be here
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
