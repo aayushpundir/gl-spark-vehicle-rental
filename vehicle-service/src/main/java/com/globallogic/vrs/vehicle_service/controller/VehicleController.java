@@ -35,4 +35,17 @@ public class VehicleController {
     public ResponseEntity<List<VehicleDTO>> getAvailable() {
         return ResponseEntity.ok(vehicleService.getAvailableVehicles());
     }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestParam String status) {
+        vehicleService.updateStatus(id, status);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    // Only ADMIN can reach this point due to SecurityConfig
+    public ResponseEntity<String> deleteVehicle(@PathVariable Long id) {
+        String message = vehicleService.deleteVehicle(id);
+        return ResponseEntity.ok(message);
+    }
 }

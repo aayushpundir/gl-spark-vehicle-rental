@@ -86,4 +86,28 @@ public class VehicleServiceImpl implements VehicleService{
 
         return vehiclesDto;
     }
+
+    @Override
+    public void updateStatus(Long id, String status) {
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found with id: " + id));
+
+        vehicle.setStatus(status.toUpperCase());
+        vehicleRepository.save(vehicle);
+    }
+
+    @Override
+    public String deleteVehicle(Long id) {
+        // 1. Find the vehicle first to get its info for the message
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + id));
+
+        String vehicleInfo = vehicle.getBrand() + " " + vehicle.getModel();
+
+        // 2. Perform the actual deletion
+        vehicleRepository.deleteById(id);
+
+        // 3. Return a helpful confirmation string
+        return "Vehicle [" + vehicleInfo + "] with ID " + id + " has been successfully deleted from the system.";
+    }
 }
