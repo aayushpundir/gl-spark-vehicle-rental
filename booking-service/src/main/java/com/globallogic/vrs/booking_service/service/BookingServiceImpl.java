@@ -120,4 +120,30 @@ public class BookingServiceImpl implements BookingService{
         dto.setStatus(booking.getStatus());
         return dto;
     }
+
+    @Override
+    public List<BookingResponseDTO> getBookingsByStatus(String status) {
+        return bookingRepository.findByStatus(status)
+                .stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void markBookingAsReturned(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        if (!"CONFIRMED".equalsIgnoreCase(booking.getStatus())) {
+            throw new RuntimeException("Only CONFIRMED bookings can be completed");
+        }
+
+        booking.setStatus("COMPLETED");
+        bookingRepository.save(booking);
+
+        // Make vehicle AVAILABLE again
+        vehicleClient.updateStatus(booking.getVehicleId(), "AVAILABLE");
+    }
+
 }
