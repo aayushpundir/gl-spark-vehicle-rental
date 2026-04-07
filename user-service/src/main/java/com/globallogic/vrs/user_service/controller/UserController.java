@@ -29,6 +29,12 @@ public class UserController {
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 
+    @PostMapping("/register/admin")
+    public ResponseEntity<User> registerAdmin(@Valid @RequestBody UserDTO userDto) {
+        User registeredAdmin = userService.registerAdmin(userDto);
+        return new ResponseEntity<>(registeredAdmin, HttpStatus.CREATED);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         // 1. Ask the service to authenticate and give us everything we need

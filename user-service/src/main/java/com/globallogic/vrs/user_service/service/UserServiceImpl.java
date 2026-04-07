@@ -33,6 +33,23 @@ public class UserServiceImpl implements UserService {
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setRole("CUSTOMER");
+
+        return userRepository.save(user);
+
+    }
+
+    @Override
+    public User registerAdmin(UserDTO userDto) {
+
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("User with email " + userDto.getEmail() + " already exists!");
+        }
+
+        User user = new User();
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setRole("ADMIN");
 
         return userRepository.save(user);
