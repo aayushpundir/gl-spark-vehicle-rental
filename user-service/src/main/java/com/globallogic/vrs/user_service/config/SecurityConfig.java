@@ -27,7 +27,7 @@ public class SecurityConfig {
                 // 3. Configure Authorization
                 .authorizeHttpRequests(auth -> auth
                         // Permit registration, login, and the default error path
-                        .requestMatchers("/api/users/register", "/api/users/login", "/error").permitAll()
+                        .requestMatchers("/api/users/register", "/api/users/login", "/error", "/api/users/register/admin").permitAll()
                         // Secure everything else
                         .anyRequest().authenticated()
                 )
