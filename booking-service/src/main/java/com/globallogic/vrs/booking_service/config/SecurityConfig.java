@@ -28,7 +28,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.PUT, "/api/bookings/cancel/**").hasAnyRole("CUSTOMER", "ADMIN")
                         .requestMatchers("/api/bookings/create", "/api/bookings/my-bookings").hasAnyRole("CUSTOMER", "ADMIN")
-                        .requestMatchers("/api/bookings/all").hasRole("ADMIN")
+                        .requestMatchers("/api/bookings/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/bookings/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 // ADD THIS LINE:

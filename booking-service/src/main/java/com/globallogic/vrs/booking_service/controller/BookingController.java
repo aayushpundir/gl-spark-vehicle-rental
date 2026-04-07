@@ -41,7 +41,13 @@ public class BookingController {
      * Admin only: View all bookings in the system.
      */
     @GetMapping("/all")
-    public ResponseEntity<List<BookingResponseDTO>> getAllBookings() {
+    public ResponseEntity<List<BookingResponseDTO>> getAllBookings(
+            @RequestParam(required = false) String status) {
+
+        if (status != null) {
+            return ResponseEntity.ok(bookingService.getBookingsByStatus(status));
+        }
+
         return ResponseEntity.ok(bookingService.getAllBookings());
     }
 
@@ -54,4 +60,12 @@ public class BookingController {
         bookingService.cancelBooking(id, userEmail);
         return ResponseEntity.ok("Booking cancelled successfully and vehicle is now available.");
     }
+
+//    Return a vehicle after the end date
+    @PutMapping("/{id}/return")
+    public ResponseEntity<String> markAsReturned(@PathVariable Long id) {
+        bookingService.markBookingAsReturned(id);
+        return ResponseEntity.ok("Booking marked as COMPLETED and vehicle returned.");
+    }
+
 }
