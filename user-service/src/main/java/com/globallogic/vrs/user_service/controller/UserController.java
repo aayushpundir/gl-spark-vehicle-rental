@@ -44,4 +44,10 @@ public class UserController {
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
+    @PostMapping("/login/admin")
+    public ResponseEntity<AuthResponse> loginAdmin(@Valid @RequestBody LoginRequest loginRequest) {
+        AuthResponse authResponse = userService.loginAdmin(loginRequest);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    }
+
 }

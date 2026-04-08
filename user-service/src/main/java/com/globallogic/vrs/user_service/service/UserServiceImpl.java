@@ -62,6 +62,38 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (!user.getRole().equals("CUSTOMER")) {
+            throw new  UserAlreadyExistsException("User with email " + loginRequest.getEmail() + " is not a registered customer!");
+        }
+
+        // 2. Check if password matches (BCrypt)
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        // 3. Generate token (ensure jwtUtils now takes two arguments: email and role)
+        String token = jwtUtils.generateToken(user.getEmail(), user.getRole());
+
+        // 4. Return the AuthResponse DTO
+        // (Assuming you have a constructor or @AllArgsConstructor on AuthResponse)
+        return new AuthResponse(
+                token,
+                user.getRole(),
+                "Bearer",
+                user.getEmail()
+        );
+    }
+
+    @Override
+    public AuthResponse loginAdmin(LoginRequest loginRequest) {
+        // 1. Check if user exists
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!user.getRole().equals("ADMIN")) {
+            throw new  UserAlreadyExistsException("User with email id " + user.getEmail() + " is not registered as admin!");
+        }
+
         // 2. Check if password matches (BCrypt)
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
