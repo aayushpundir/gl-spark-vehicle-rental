@@ -11,6 +11,9 @@ public class VehicleDTO {
     @NotBlank(message = "Brand cannot be empty")
     private String brand;
 
+    @NotBlank(message = "City cannot be empty")
+    private String city;
+
     @NotBlank(message = "Model cannot be empty")
     private String model;
 
