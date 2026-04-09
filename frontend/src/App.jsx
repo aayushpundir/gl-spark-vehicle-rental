@@ -6,6 +6,7 @@ import Register from './pages/Register/Register';
 import { ToastContainer } from 'react-toastify';
 import Login from './pages/Login/Login';
 import "react-toastify/dist/ReactToastify.css";
+import AboutPage from './pages/AboutPage/AboutPage';
 import HomePage from './pages/HomePage/HomePage';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path='/' element={<HomePage />}/>
           <Route />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
          <ToastContainer position="top-right" autoClose={3000} />
       <Footer />
