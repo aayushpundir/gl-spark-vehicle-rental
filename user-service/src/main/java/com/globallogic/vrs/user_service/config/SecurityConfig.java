@@ -1,5 +1,7 @@
 package com.globallogic.vrs.user_service.config;
 
+import com.globallogic.vrs.user_service.security.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,32 +12,22 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
+    @Autowired
+    private JwtAuthenticationFilter jwtFilter;
+
+    // PasswordEncoder IS GONE FROM HERE
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Disable CSRF (Mandatory for Stateless JWT APIs)
                 .csrf(csrf -> csrf.disable())
-
-                // 2. Handle CORS (Optional but good for React frontend later)
-                .cors(cors -> cors.disable())
-
-                // 3. Configure Authorization
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Permit registration, login, and the default error path
-                        .requestMatchers("/api/users/register", "/api/users/login", "/error", "/api/users/register/admin", "/api/users/login/admin").permitAll()
-                        // Secure everything else
+                        .requestMatchers("/api/users/register/**", "/api/users/login/**", "/error").permitAll()
                         .anyRequest().authenticated()
                 )
-
-                // 4. Set Session Management to Stateless
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                .addFilterBefore(jwtFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
