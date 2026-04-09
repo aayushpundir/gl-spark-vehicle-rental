@@ -4,6 +4,7 @@ import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import Register from './pages/Register/Register';
 import { ToastContainer } from 'react-toastify';
+import Login from './pages/Login/Login';
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
@@ -12,12 +13,13 @@ function App() {
       <Navbar />
       <Router>
         <Routes>
-          <Route/>
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route/>
+          <Route />
+          <Route />
         </Routes>
       </Router>
-      <ToastContainer position='top-right' autoClose={3000} />
+         <ToastContainer position="top-right" autoClose={3000} />
       <Footer />
     </Router>
   );
