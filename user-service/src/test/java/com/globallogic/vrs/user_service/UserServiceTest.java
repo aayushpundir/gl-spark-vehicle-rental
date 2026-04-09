@@ -33,7 +33,7 @@ public class UserServiceTest {
     @Test
     void testRegisterUser_Success() {
         // 1. Create the DTO (Input)
-        UserDTO userDto = new UserDTO("John Doe", "john@example.com", "password123");
+        UserDTO userDto = new UserDTO("John Doe", "john@example.com", "password123","MH 14 20110062821");
 
         // 2. Create the Entity (What the DB would return)
         User user = new User();
@@ -41,6 +41,7 @@ public class UserServiceTest {
         user.setName("John Doe");
         user.setEmail("john@example.com");
         user.setPassword("hashedPassword123");
+        user.setDrivingLicenseNumber("MH 14 20110062821");
         user.setRole("CUSTOMER");
 
         // 3. Setup Mocks
@@ -60,7 +61,7 @@ public class UserServiceTest {
     @Test
     void testRegisterUser_DuplicateEmail_ThrowsException() {
         // Given
-        UserDTO userDto = new UserDTO("Jane Doe", "duplicate@example.com", "password123");
+        UserDTO userDto = new UserDTO("Jane Doe", "duplicate@example.com", "password123","MH 14 20110062821");
 
         // Simulate that the email already exists in the database
         when(userRepository.findByEmail("duplicate@example.com")).thenReturn(Optional.of(new User()));
