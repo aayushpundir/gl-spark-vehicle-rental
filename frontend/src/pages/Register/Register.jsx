@@ -7,8 +7,10 @@ const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: ''
+    password: '',
+    drivingLicenseNumber: ''   // ✅ added
   });
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -20,7 +22,7 @@ const Register = () => {
   };
 
   const validateForm = () => {
-    if (!formData.name || !formData.email || !formData.password) {
+    if (!formData.name || !formData.email || !formData.password || !formData.drivingLicenseNumber) {
       toast.error('All fields are required');
       return false;
     }
@@ -47,7 +49,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/register', {
+      const response = await fetch('http://localhost:8080/api/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -63,9 +65,10 @@ const Register = () => {
         toast.error(errorData.message || 'Registration failed');
       }
     } catch (err) {
-      toast.error('Network error. Please try again.');
+      toast.error('Network error. Please try again.'+ err.message);
     } finally {
       setLoading(false);
+      navigate('/login');
     }
   };
 
@@ -105,9 +108,27 @@ const Register = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading}>
+          {/* ✅ New Field */}
+          <div className="form-group">
+            <input
+              type="text"
+              name="drivingLicenseNumber"
+              placeholder="Driving License Number"
+              value={formData.drivingLicenseNumber}
+              onChange={handleChange}
+            />
+          </div>
+
+          <button type="submit" disabled={loading} className='btn-register'>
             {loading ? 'Registering...' : 'Register'}
           </button>
+
+          <p className="login-text">
+            Already have an account?{" "}
+            <span onClick={() => navigate("/login")} className="login-link">
+              Login
+            </span>
+          </p>
         </form>
       </div>
     </div>

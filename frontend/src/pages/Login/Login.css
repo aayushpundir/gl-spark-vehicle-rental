@@ -1,69 +1,136 @@
-/* Full page center */
+/* Background with dark + orange gradient */
 .login-container {
-  height: 100vh;
+  min-height: calc(100vh - 100px); /* navbar + footer approx height */
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background: linear-gradient(135deg, #f0edeb, #9c7a66); */
-  font-family: Arial, sans-serif;
+
+  background: radial-gradient(circle at top right, #ff7a18, #0f0f0f 60%);
 }
 
-/* Card */
+/* Glassmorphism card */
 .login-card {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  width: 320px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  padding: 35px 30px;
+  width: 340px;
+
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  gap: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(255, 122, 24, 0.3);
+
+  transition: 0.3s ease;
 }
 
+.login-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(255, 122, 24, 0.5);
+}
+
+/* Title */
 .login-card h2 {
   text-align: center;
+  color: #fff;
+  letter-spacing: 1px;
 }
 
 /* Inputs */
 .login-card input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+
   font-size: 14px;
+
+  transition: 0.3s;
+}
+
+.login-card input::placeholder {
+  color: #ccc;
+}
+
+.login-card input:focus {
+  border: 1px solid #ff7a18;
+  box-shadow: 0 0 8px rgba(255, 122, 24, 0.6);
+}
+
+/* Radio buttons */
+.radio-group {
+  display: flex;
+  justify-content: space-around;
+  color: #ddd;
+  font-size: 14px;
+}
+
+.radio-group input {
+  accent-color: #ff7a18;
 }
 
 /* Button */
 .login-card button {
-  padding: 10px;
+  padding: 12px;
   border: none;
-  background: #667eea;
-  color: white;
+  border-radius: 8px;
+
+  background: linear-gradient(135deg, #ff7a18, #ffb347);
+  color: #111;
+
   font-size: 16px;
-  border-radius: 6px;
+  font-weight: bold;
+
   cursor: pointer;
   transition: 0.3s;
 }
 
 .login-card button:hover {
-  background: #5a67d8;
+  background: linear-gradient(135deg, #ffb347, #ff7a18);
+  transform: scale(1.03);
+  box-shadow: 0 0 15px rgba(255, 122, 24, 0.7);
 }
 
-/* Message */
+/* Disabled button */
+.login-card button:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+/* Optional message */
 .message {
   text-align: center;
-  font-size: 14px;
-  color: #333;
+  color: #ccc;
+  font-size: 13px;
 }
-/* Radio buttons */
-.radio-group {
-  display: flex;
-  justify-content: space-around;
+.register-text {
+  margin-top: 12px;
   font-size: 14px;
+  text-align: center;
+  color: #555;
 }
 
-.radio-group label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+.register-link {
+  color: #f87a03;
   cursor: pointer;
+  font-weight: 500;
 }
+
+.register-link:hover {
+  text-decoration: underline;
+}
+/* input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,0.08) inset !important;
+  -webkit-text-fill-color: #fff !important;
+} */
