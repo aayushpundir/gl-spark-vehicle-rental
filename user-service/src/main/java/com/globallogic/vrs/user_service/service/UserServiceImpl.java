@@ -40,23 +40,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerAdmin(UserDTO userDto) {
-
-        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException("User with email " + userDto.getEmail() + " already exists!");
-        }
-
-        User user = new User();
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRole("ADMIN");
-
-        return userRepository.save(user);
-
-    }
-
-    @Override
     public AuthResponse loginUser(LoginRequest loginRequest) {
         // 1. Check if user exists
         User user = userRepository.findByEmail(loginRequest.getEmail())
@@ -111,4 +94,22 @@ public class UserServiceImpl implements UserService {
                 user.getEmail()
         );
     }
+
+    @Override
+    public String promoteUser(String email, String currentUserEmail) {
+        if (!"Ayush@example.com".equals(currentUserEmail)) {
+            throw new RuntimeException("Access Denied: Only Owner can perform promotions.");
+        }
+
+        // 2. Find the user to be promoted
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User to be promoted not found"));
+
+        // 3. Update role
+        user.setRole("ADMIN");
+        userRepository.save(user);
+
+        return "User Promoted Successfully as an admin.";
+    }
+
 }

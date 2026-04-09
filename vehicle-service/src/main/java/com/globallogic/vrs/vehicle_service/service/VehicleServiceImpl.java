@@ -17,6 +17,7 @@ public class VehicleServiceImpl implements VehicleService{
     @Override
     public VehicleDTO addVehicle(VehicleDTO vehicleDto) {
         Vehicle vehicle = new Vehicle();
+        vehicle.setCity(vehicleDto.getCity());
         vehicle.setBrand(vehicleDto.getBrand());
         vehicle.setModel(vehicleDto.getModel());
         vehicle.setPlateNumber(vehicleDto.getPlateNumber());
@@ -33,6 +34,7 @@ public class VehicleServiceImpl implements VehicleService{
 
     @Override
     public List<VehicleDTO> getAllVehicles() {
+
         List<Vehicle> vehicles = vehicleRepository.findAll();
         List<VehicleDTO> vehicleDTOs = new ArrayList<>();
 
@@ -81,6 +83,33 @@ public class VehicleServiceImpl implements VehicleService{
             vehicleDTO.setPricePerDay(vehicle.getPricePerDay());
             vehicleDTO.setStatus(vehicle.getStatus());
 
+            vehiclesDto.add(vehicleDTO);
+        }
+
+        return vehiclesDto;
+    }
+
+    @Override
+    public List<VehicleDTO> getAvailableVehiclesByCity(String city) {
+        List<Vehicle> vehicles = vehicleRepository.findByCity(city);
+
+        List<Vehicle> availableVehicles = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+            if (vehicle.getStatus().equals("AVAILABLE")) {
+                availableVehicles.add(vehicle);
+            }
+        }
+
+        List<VehicleDTO> vehiclesDto = new ArrayList<>();
+        for (Vehicle vehicle : availableVehicles) {
+            VehicleDTO vehicleDTO = new VehicleDTO();
+            vehicleDTO.setBrand(vehicle.getBrand());
+            vehicleDTO.setCity(vehicle.getCity());
+            vehicleDTO.setModel(vehicle.getModel());
+            vehicleDTO.setPlateNumber(vehicle.getPlateNumber());
+            vehicleDTO.setPricePerDay(vehicle.getPricePerDay());
+            vehicleDTO.setStatus(vehicle.getStatus());
             vehiclesDto.add(vehicleDTO);
         }
 

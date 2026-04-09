@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
-    <div>
+    <Router>
       <Navbar />
       <Router>
         <Routes>
@@ -19,7 +19,7 @@ function App() {
       </Router>
       <ToastContainer position='top-right' autoClose={3000} />
       <Footer />
-    </div>
+    </Router>
   );
 }
 

@@ -13,6 +13,9 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "City is required.")
+    private String city;
+
     @NotBlank(message = "Brand is required")
     private String brand;
 
