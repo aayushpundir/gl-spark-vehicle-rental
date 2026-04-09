@@ -26,6 +26,11 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.getAllVehicles());
     }
 
+    @GetMapping("/all/{city}")
+    public ResponseEntity<List<VehicleDTO>> getAllVehiclesByCity(@PathVariable String city) {
+        return ResponseEntity.ok(vehicleService.getAvailableVehiclesByCity(city));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<VehicleDTO> getVehicleById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(vehicleService.getVehicleById(id));
