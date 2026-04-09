@@ -30,4 +30,24 @@ public class JwtUtils {
                 .signWith(getSigningKey())
                 .compact();
     }
+
+    // Add these to your existing JwtUtils.java
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getEmailFromToken(String token) {
+        return Jwts.parser().verifyWith(getSigningKey()).build()
+                .parseSignedClaims(token).getPayload().getSubject();
+    }
+
+    public String getRoleFromToken(String token) {
+        return Jwts.parser().verifyWith(getSigningKey()).build()
+                .parseSignedClaims(token).getPayload().get("role", String.class);
+    }
 }
