@@ -17,4 +17,12 @@ public class UserDTO {
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
+
+    @NotBlank(message = "Driving License is necessary.")
+    @Pattern(
+            regexp = "^[A-Z]{2}\\s?[0-9]{2}\\s?[0-9]{4}\\s?[0-9]{7}$",
+            message = "Invalid Driving License format (e.g., DL01 20110012345 or MH 14 20110012345)"
+    )
+    private String drivingLicenseNumber;
+
 }
