@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!user.getRole().equals("ADMIN")) {
+        if (!user.getRole().equals("Admin")) {
             throw new  UserAlreadyExistsException("User with email id " + user.getEmail() + " is not registered as admin!");
         }
 
