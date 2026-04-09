@@ -10,7 +10,7 @@ export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "USER" // default
+    role: "CUSTOMER" // default
   });
 
   const [loading, setLoading] = useState(false);
@@ -23,43 +23,51 @@ export default function Login() {
     });
   };
 
-  // Handle login
+  // 🔥 Handle login with dynamic API
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/login",
-        {
-          email: formData.email,
-          password: formData.password
-          // 🔥 role usually NOT required in login API
-        }
-      );
+      // ✅ Decide API based on role
+      let apiUrl = "";
+
+      if (formData.role === "ADMIN") {
+        apiUrl = "http://localhost:8080/api/users/admin/login";
+      } else {
+        apiUrl = "http://localhost:8080/api/users/login";
+      }
+
+      const response = await axios.post(apiUrl, {
+        email: formData.email,
+        password: formData.password
+      });
 
       const data = response.data;
 
-      // Optional check (extra security UI side)
+      // Optional check (extra safety)
       if (data.role !== formData.role) {
         toast.error("Selected role does not match user role ❌");
         setLoading(false);
         return;
       }
 
-      // Save token
+      // ✅ Save data
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
       localStorage.setItem("email", data.email);
 
+      // 🔥 Notify Navbar instantly
+      window.dispatchEvent(new Event("authChange"));
+
       toast.success("Login successful 🎉");
 
-      // Role-based navigation 🔥
+      // ✅ Role-based navigation
       setTimeout(() => {
         if (data.role === "ADMIN") {
           navigate("/admin-dashboard");
         } else {
-          navigate("/dashboard");
+          navigate("/");
         }
       }, 1500);
 
@@ -101,11 +109,11 @@ export default function Login() {
             <input
               type="radio"
               name="role"
-              value="USER"
-              checked={formData.role === "USER"}
+              value="CUSTOMER"
+              checked={formData.role === "CUSTOMER"}
               onChange={handleChange}
             />
-            User
+            Customer
           </label>
 
           <label>
@@ -120,9 +128,16 @@ export default function Login() {
           </label>
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className="btn-login">
           {loading ? "Logging in..." : "Login"}
         </button>
+
+        <p className="register-text">
+          Not registered?{" "}
+          <span onClick={() => navigate("/register")} className="register-link">
+            Create an account
+          </span>
+        </p>
       </form>
     </div>
   );
