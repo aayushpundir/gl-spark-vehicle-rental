@@ -1,7 +1,10 @@
 import './App.css';
-import { BrowerRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
+import Register from './pages/Register/Register';
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -9,11 +12,12 @@ function App() {
       <Navbar />
       <Router>
         <Routes>
-          <Route />   
-          <Route />
-          <Route />
+          <Route/>
+          <Route path="/register" element={<Register />} />
+          <Route/>
         </Routes>
       </Router>
+      <ToastContainer position='top-right' autoClose={3000} />
       <Footer />
     </div>
   );
