@@ -12,7 +12,7 @@ import java.util.Date;
 public class JwtUtils {
 
     // A properly Base64 encoded string representing a 256-bit key
-    private final String jwtSecret = "YmFzZTY0LWVuY29kZWQtc2VjcmV0LWtleS1mb3ItdnJzLXByb2plY3QtMjAyNg==";
+    private final String jwtSecret = "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNA==";
     private final int jwtExpirationMs = 86400000;
 
     private SecretKey getSigningKey() {

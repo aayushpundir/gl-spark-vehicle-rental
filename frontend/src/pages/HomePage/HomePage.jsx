@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './HomePage.css'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
 
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -13,6 +15,7 @@ const HomePage = () => {
   const [startTime, setStartTime] = useState('12:00')
   const [endTime, setEndTime] = useState('16:00')
   const [delivery, setDelivery] = useState(false)
+  const navigate = useNavigate();
 
   const slides = [
     {
@@ -143,6 +146,19 @@ const HomePage = () => {
     setCurrentCitySlide((prev) => (prev - 1 + cities.length) % cities.length)
   }
 
+  const handleBookNowButton = () => {
+  const token = localStorage.getItem("token");
+
+  // Check if token exists and isn't just an empty string
+  if (!token || token === "") {
+    toast.info("Please login to book a vehicle");
+    navigate("/login");
+  } else {
+    // Already logged in, go to the fleet
+    navigate("/vehicles");
+  }
+};
+
   return (
     <div className="home-page">
       {/* Hero Slider Section with Sticky Booking Form */}
@@ -258,7 +274,7 @@ const HomePage = () => {
               <div className="slide-content">
                 <h1 className="slide-title">{slide.title}</h1>
                 <p className="slide-subtitle">{slide.subtitle}</p>
-                <button className="cta-button">Book Now</button>
+                <button className="cta-button" onClick={handleBookNowButton}>Book Now</button>
               </div>
               <div className="slide-overlay"></div>
             </div>

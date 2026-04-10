@@ -64,7 +64,8 @@ public class UserServiceImpl implements UserService {
                 token,
                 user.getRole(),
                 "Bearer",
-                user.getEmail()
+                user.getEmail(),
+                user.getName()
         );
     }
 
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!user.getRole().equals("Admin")) {
+        if (!user.getRole().equals("ADMIN")) {
             throw new  UserAlreadyExistsException("User with email id " + user.getEmail() + " is not registered as admin!");
         }
 
@@ -92,7 +93,8 @@ public class UserServiceImpl implements UserService {
                 token,
                 user.getRole(),
                 "Bearer",
-                user.getEmail()
+                user.getEmail(),
+                user.getName()
         );
     }
 
