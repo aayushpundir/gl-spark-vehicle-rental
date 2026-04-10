@@ -10,7 +10,7 @@ export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "CUSTOMER" // default
+    role: "CUSTOMER"
   });
 
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ export default function Login() {
       // ✅ Decide API based on role
       let apiUrl = "";
 
-      if (formData.role === "ADMIN") {
+      if (formData.role === "Admin") {
         apiUrl = "http://localhost:8080/api/users/admin/login";
       } else {
         apiUrl = "http://localhost:8080/api/users/login";
@@ -56,6 +56,7 @@ export default function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
       localStorage.setItem("email", data.email);
+      localStorage.setItem("name", data.name);
 
       // 🔥 Notify Navbar instantly
       window.dispatchEvent(new Event("authChange"));
@@ -64,7 +65,7 @@ export default function Login() {
 
       // ✅ Role-based navigation
       setTimeout(() => {
-        if (data.role === "ADMIN") {
+        if (data.role === "Admin") {
           navigate("/admin-dashboard");
         } else {
           navigate("/");
@@ -121,7 +122,7 @@ export default function Login() {
               type="radio"
               name="role"
               value="ADMIN"
-              checked={formData.role === "ADMIN"}
+              checked={formData.role === "Admin"}
               onChange={handleChange}
             />
             Admin

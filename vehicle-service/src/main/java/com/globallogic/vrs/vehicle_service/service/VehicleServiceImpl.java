@@ -1,6 +1,7 @@
 package com.globallogic.vrs.vehicle_service.service;
 
 import com.globallogic.vrs.vehicle_service.dto.VehicleDTO;
+import com.globallogic.vrs.vehicle_service.dto.VehicleResponse;
 import com.globallogic.vrs.vehicle_service.model.Vehicle;
 import com.globallogic.vrs.vehicle_service.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +55,14 @@ public class VehicleServiceImpl implements VehicleService{
     }
 
     @Override
-    public VehicleDTO getVehicleById(Long id) {
+    public VehicleResponse getVehicleById(Long id) {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Vehicle not found with id: " + id));
 
-        VehicleDTO vehicleDTO = new VehicleDTO();
+        VehicleResponse vehicleDTO = new VehicleResponse();
 
         vehicleDTO.setBrand(vehicle.getBrand());
+        vehicleDTO.setCity(vehicle.getCity());
         vehicleDTO.setModel(vehicle.getModel());
         vehicleDTO.setPlateNumber(vehicle.getPlateNumber());
         vehicleDTO.setPricePerDay(vehicle.getPricePerDay());
@@ -90,7 +92,7 @@ public class VehicleServiceImpl implements VehicleService{
     }
 
     @Override
-    public List<VehicleDTO> getAvailableVehiclesByCity(String city) {
+    public List<VehicleResponse> getAvailableVehiclesByCity(String city) {
         List<Vehicle> vehicles = vehicleRepository.findByCity(city);
 
         List<Vehicle> availableVehicles = new ArrayList<>();
@@ -101,9 +103,10 @@ public class VehicleServiceImpl implements VehicleService{
             }
         }
 
-        List<VehicleDTO> vehiclesDto = new ArrayList<>();
+        List<VehicleResponse> vehiclesDto = new ArrayList<>();
         for (Vehicle vehicle : availableVehicles) {
-            VehicleDTO vehicleDTO = new VehicleDTO();
+            VehicleResponse vehicleDTO = new VehicleResponse();
+            vehicleDTO.setId(vehicle.getId());
             vehicleDTO.setBrand(vehicle.getBrand());
             vehicleDTO.setCity(vehicle.getCity());
             vehicleDTO.setModel(vehicle.getModel());

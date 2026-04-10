@@ -1,6 +1,5 @@
 package com.globallogic.vrs.booking_service.security;
 
-import java.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.io.IOException;
 import java.util.Collections;
 
 @Component
@@ -31,13 +31,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (jwtUtils.validateToken(token)) {
                 String email = jwtUtils.getEmailFromToken(token);
+                // Extract the role from the token using your JwtUtils
                 String role = jwtUtils.getRoleFromToken(token);
 
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                // VERY IMPORTANT: Add "ROLE_" prefix for hasRole("ADMIN") to work
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         email, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role))
                 );
 
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                // Tell Spring Security: "This user is verified and has these roles"
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
         filterChain.doFilter(request, response);
