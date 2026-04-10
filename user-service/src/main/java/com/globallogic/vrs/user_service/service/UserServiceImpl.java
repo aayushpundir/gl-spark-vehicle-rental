@@ -64,7 +64,8 @@ public class UserServiceImpl implements UserService {
                 token,
                 user.getRole(),
                 "Bearer",
-                user.getEmail()
+                user.getEmail(),
+                user.getName()
         );
     }
 
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!user.getRole().equals("Admin")) {
+        if (!user.getRole().equals("ADMIN")) {
             throw new  UserAlreadyExistsException("User with email id " + user.getEmail() + " is not registered as admin!");
         }
 
@@ -92,13 +93,14 @@ public class UserServiceImpl implements UserService {
                 token,
                 user.getRole(),
                 "Bearer",
-                user.getEmail()
+                user.getEmail(),
+                user.getName()
         );
     }
 
     @Override
     public String promoteUser(String email, String currentUserEmail) {
-        if (!"Ayush@example.com".equals(currentUserEmail)) {
+        if (!"Ayush@gmail.com".equals(currentUserEmail)) {
             throw new RuntimeException("Access Denied: Only Owner can perform promotions.");
         }
 

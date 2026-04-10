@@ -1,0 +1,236 @@
+/* --- Base Page Layout --- */
+.vehicle-page {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.5s ease-in-out;
+  padding: 40px 20px;
+  background-color: #f8f9fa; /* Light gray page background */
+  color: #333333; /* Default dark text for the page */
+}
+
+/* --- Hero State (Center) --- */
+.hero-view {
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-view .search-container h1 {
+  font-size: 2.8rem;
+  color: #1a1a1a;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 800;
+}
+
+/* --- Results State (Top) --- */
+.results-view {
+  justify-content: flex-start;
+}
+
+.results-view .search-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 40px auto;
+  text-align: center;
+}
+
+/* --- 🔍 THE SEARCH BAR (Fixed Visibility) --- */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff !important; /* Force pure white background */
+  padding: 8px 20px;
+  border-radius: 50px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid #e0e0e0;
+}
+
+.search-bar input {
+  border: none !important;
+  outline: none !important;
+  flex: 1;
+  padding: 12px;
+  font-size: 1.1rem;
+  margin-left: 10px;
+  
+  /* 🔥 CRITICAL FIXES FOR VISIBILITY 🔥 */
+  color: #000000 !important;       /* Force text to be BLACK */
+  background-color: #ffffff !important; /* Force input background to WHITE */
+  caret-color: #ff4d4d;            /* Color of the typing cursor */
+}
+
+/* Styling the placeholder text */
+.search-bar input::placeholder {
+  color: #999999 !important;
+  opacity: 1;
+}
+
+.search-bar .icon {
+  color: #555555; /* Dark gray icons */
+}
+
+.search-bar button {
+  background: #ff4d4d;
+  color: white !important;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-bar button:hover {
+  background: #e63939;
+  transform: scale(1.05);
+}
+
+.search-bar button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* --- 🚗 Vehicles Results Grid --- */
+.vehicles-results {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.vehicles-results h2 {
+  margin-bottom: 25px;
+  color: #2d3436;
+  font-size: 1.8rem;
+  border-bottom: 2px solid #ff4d4d;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 10px;
+}
+
+.vehicle-card {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
+}
+
+.vehicle-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.vehicle-image {
+  height: 200px;
+  background: #f1f2f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.vehicle-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vehicle-info {
+  padding: 25px;
+}
+
+.vehicle-info h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #2d3436;
+}
+
+.type {
+  color: #636e72;
+  font-size: 0.9rem;
+  margin: 5px 0 15px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.price-tag {
+  margin-bottom: 20px;
+}
+
+.amount {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ff4d4d;
+}
+
+.per-day {
+  color: #636e72;
+  font-size: 0.9rem;
+}
+
+.book-btn {
+  width: 100%;
+  background: #2d3436;
+  color: #ffffff !important;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.book-btn:hover {
+  background: #000000;
+}
+
+.date-picker-mini {
+  display: flex;
+  gap: 10px;
+  padding: 0 15px;
+  border-left: 1px solid #eee;
+}
+
+.date-picker-mini input {
+  border: none;
+  font-size: 0.9rem;
+  color: #666;
+  outline: none;
+}
+
+.book-btn.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Ensure the search bar accommodates the dates */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 10px 20px;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 800px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

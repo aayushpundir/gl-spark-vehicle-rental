@@ -1,6 +1,7 @@
 package com.globallogic.vrs.vehicle_service.controller;
 
 import com.globallogic.vrs.vehicle_service.dto.VehicleDTO;
+import com.globallogic.vrs.vehicle_service.dto.VehicleResponse;
 import com.globallogic.vrs.vehicle_service.service.VehicleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +23,17 @@ public class VehicleController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<VehicleDTO>> getAllVehicles() {
+    public ResponseEntity<List<VehicleResponse>> getAllVehicles() {
         return ResponseEntity.ok(vehicleService.getAllVehicles());
     }
 
     @GetMapping("/all/{city}")
-    public ResponseEntity<List<VehicleDTO>> getAllVehiclesByCity(@PathVariable String city) {
+    public ResponseEntity<List<VehicleResponse>> getAllVehiclesByCity(@PathVariable String city) {
         return ResponseEntity.ok(vehicleService.getAvailableVehiclesByCity(city));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VehicleDTO> getVehicleById(@PathVariable("id") Long id) {
+    public ResponseEntity<VehicleResponse> getVehicleById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(vehicleService.getVehicleById(id));
     }
 

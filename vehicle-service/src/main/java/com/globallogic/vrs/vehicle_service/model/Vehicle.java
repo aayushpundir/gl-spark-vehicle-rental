@@ -1,5 +1,6 @@
 package com.globallogic.vrs.vehicle_service.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +15,8 @@ public class Vehicle {
     private Long id;
 
     @NotBlank(message = "City is required.")
+    @Column(name = "city")
+    @JsonProperty("city")
     private String city;
 
     @NotBlank(message = "Brand is required")
