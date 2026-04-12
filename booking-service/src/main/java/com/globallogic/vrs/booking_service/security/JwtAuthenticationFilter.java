@@ -24,25 +24,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        try {
+            String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
 
-            if (jwtUtils.validateToken(token)) {
-                String email = jwtUtils.getEmailFromToken(token);
-                // Extract the role from the token using your JwtUtils
-                String role = jwtUtils.getRoleFromToken(token);
+                if (jwtUtils.validateToken(token)) {
+                    String email = jwtUtils.getEmailFromToken(token);
+                    String role = jwtUtils.getRoleFromToken(token);
 
-                // VERY IMPORTANT: Add "ROLE_" prefix for hasRole("ADMIN") to work
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        email, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role))
-                );
+                    // 🛡️ SAFETY CHECK: If role is null, don't crash the app
+                    if (role != null) {
+                        // Normalize the role: ensure it has ROLE_ and is Uppercase
+                        String finalRole = role.toUpperCase().startsWith("ROLE_") ? role.toUpperCase() : "ROLE_" + role.toUpperCase();
 
-                // Tell Spring Security: "This user is verified and has these roles"
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                email, null, Collections.singletonList(new SimpleGrantedAuthority(finalRole))
+                        );
+
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        System.out.println("✅ SecurityContext set for user: " + email + " with role: " + finalRole);
+                    } else {
+                        System.out.println("⚠️ Role extracted from token was NULL");
+                    }
+                }
             }
+        } catch (Exception e) {
+            // 🔥 This will finally show the 500 error in your console
+            System.err.println("❌ JWT Filter Crash: " + e.getMessage());
+            e.printStackTrace();
         }
+
         filterChain.doFilter(request, response);
     }
 }

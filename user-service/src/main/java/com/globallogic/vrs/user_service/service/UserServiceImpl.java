@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String promoteUser(String email, String currentUserEmail) {
-        if (!"Ayush@example.com".equals(currentUserEmail)) {
+        if (!"Ayush@gmail.com".equals(currentUserEmail)) {
             throw new RuntimeException("Access Denied: Only Owner can perform promotions.");
         }
 

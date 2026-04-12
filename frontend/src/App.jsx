@@ -13,6 +13,7 @@ import ProtectedRoute from './ProtectedRoutes';
 import VehiclePage from './pages/VehiclePage/VehiclePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import MyBookings from './pages/MyBookings/MyBooking';
+import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 
 function App() {
   return (
@@ -50,6 +51,14 @@ function App() {
                 <MyBookings />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path='/admin-dashboard'
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
           />
           <Route
            path="/about"

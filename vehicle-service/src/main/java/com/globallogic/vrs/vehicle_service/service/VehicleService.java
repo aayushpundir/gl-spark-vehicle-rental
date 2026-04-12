@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface VehicleService {
     VehicleDTO addVehicle(VehicleDTO vehicleDto);
-    List<VehicleDTO> getAllVehicles();
+    List<VehicleResponse> getAllVehicles();
     VehicleResponse getVehicleById(Long id);
     List<VehicleDTO> getAvailableVehicles();
     List<VehicleResponse> getAvailableVehiclesByCity(String city);

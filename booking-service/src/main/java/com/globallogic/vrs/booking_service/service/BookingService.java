@@ -10,6 +10,7 @@ public interface BookingService {
     List<BookingResponseDTO> getMyBookings(String userEmail);
     List<BookingResponseDTO> getAllBookings();
     void cancelBooking(Long bookingId, String userEmail);
+    BookingResponseDTO findBookingById(String userEmail, Long id);
 
     List<BookingResponseDTO> getBookingsByStatus(String status);
 

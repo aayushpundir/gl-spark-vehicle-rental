@@ -199,6 +199,37 @@
   background: #000000;
 }
 
+.date-picker-mini {
+  display: flex;
+  gap: 10px;
+  padding: 0 15px;
+  border-left: 1px solid #eee;
+}
+
+.date-picker-mini input {
+  border: none;
+  font-size: 0.9rem;
+  color: #666;
+  outline: none;
+}
+
+.book-btn.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Ensure the search bar accommodates the dates */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 10px 20px;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 800px;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }

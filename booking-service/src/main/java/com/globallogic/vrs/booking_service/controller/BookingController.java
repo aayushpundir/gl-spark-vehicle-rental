@@ -37,6 +37,13 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.getMyBookings(userEmail));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BookingResponseDTO> getBooking(@PathVariable Long id) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        BookingResponseDTO booking = bookingService.findBookingById(userEmail, id);
+
+        return new  ResponseEntity<>(booking, HttpStatus.OK);
+    }
     /**
      * Admin only: View all bookings in the system.
      */

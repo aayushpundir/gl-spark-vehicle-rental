@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './Navbar.css'
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -10,6 +10,11 @@ const Navbar = () => {
 
   // ✅ Check if we are on Login or Register page
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
+
+  const role = localStorage.getItem("role");
+
+// Calculate the path once per render
+const homePath = role === "ADMIN" ? "/admin-dashboard" : "/";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -32,13 +37,30 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const handleLogoNavigate = () => {
+    if (localStorage.getItem("role") === "ADMIN") {
+      navigate("/admin-dashboard");
+    } else {
+      navigate("/");
+    }
+    
+  }
+
+  const getHomePath = () => {
+    if (localStorage.getItem("role") === "ADMIN") {
+      navigate("/admin-dashboard");
+    } else {
+      navigate("/");
+    }
+  }
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
 
         {/* Logo - ALWAYS VISIBLE */}
         <div className="navbar-logo">
-          <span className="logo-text" onClick={() => navigate("/")}>
+          <span className="logo-text" onClick={handleLogoNavigate}>
             <span className="logo-first-letter">R</span>entX
           </span>
         </div>
@@ -56,7 +78,10 @@ const Navbar = () => {
 
             {/* Links */}
             <ul className={`nav-menu ${isOpen ? 'active' : ''}`}>
-              <li className="nav-item"><a href="/" className="nav-link">Home</a></li>
+              <li className="nav-item">
+      {/* Use Link instead of <a> for faster React routing */}
+      <Link to={homePath} className="nav-link">Home</Link>
+    </li>
               <li className="nav-item"><a href="/vehicles" className="nav-link">Browse Vehicles</a></li>
               <li className="nav-item"><a href="/about" className="nav-link">About Us</a></li>
               <li className="nav-item"><a href="/contact" className="nav-link">Contact</a></li>

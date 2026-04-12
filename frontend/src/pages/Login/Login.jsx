@@ -10,7 +10,7 @@ export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "CUSTOMER"
+    role: "CUSTOMER" // Default role
   });
 
   const [loading, setLoading] = useState(false);
@@ -23,17 +23,17 @@ export default function Login() {
     });
   };
 
-  // 🔥 Handle login with dynamic API
+  // Handle login
   const handleSubmit = async (e) => {
+    console.log(formData.role);
     e.preventDefault();
     setLoading(true);
 
     try {
-      // ✅ Decide API based on role
+      // ✅ API Selection logic - using uppercase "ADMIN"
       let apiUrl = "";
-
-      if (formData.role === "Admin") {
-        apiUrl = "http://localhost:8080/api/users/admin/login";
+      if (formData.role === "ADMIN") {
+        apiUrl = "http://localhost:8080/api/users/login/admin";
       } else {
         apiUrl = "http://localhost:8080/api/users/login";
       }
@@ -45,27 +45,27 @@ export default function Login() {
 
       const data = response.data;
 
-      // Optional check (extra safety)
-      if (data.role !== formData.role) {
-        toast.error("Selected role does not match user role ❌");
+      // ✅ Role check (Case-insensitive comparison for safety)
+      if (data.role.toUpperCase() !== formData.role.toUpperCase()) {
+        toast.error("Selected role does not match user account role ❌");
         setLoading(false);
         return;
       }
 
-      // ✅ Save data
+      // ✅ Save session data
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
       localStorage.setItem("email", data.email);
       localStorage.setItem("name", data.name);
 
-      // 🔥 Notify Navbar instantly
+      // 🔥 Notify Navbar/App of state change
       window.dispatchEvent(new Event("authChange"));
 
       toast.success("Login successful 🎉");
 
       // ✅ Role-based navigation
       setTimeout(() => {
-        if (data.role === "Admin") {
+        if (data.role === "ADMIN") {
           navigate("/admin-dashboard");
         } else {
           navigate("/");
@@ -86,27 +86,31 @@ export default function Login() {
       <form className="login-card" onSubmit={handleSubmit}>
         <h2>Login</h2>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
+        <div className="input-group">
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
+        <div className="input-group">
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        {/* 🔥 Role Selection */}
+        {/* 🔥 Fixed Radio Buttons */}
         <div className="radio-group">
-          <label>
+          <label className="radio-label">
             <input
               type="radio"
               name="role"
@@ -114,18 +118,18 @@ export default function Login() {
               checked={formData.role === "CUSTOMER"}
               onChange={handleChange}
             />
-            Customer
+            <span>Customer</span>
           </label>
 
-          <label>
+          <label className="radio-label">
             <input
               type="radio"
               name="role"
               value="ADMIN"
-              checked={formData.role === "Admin"}
+              checked={formData.role === "ADMIN"} // Corrected comparison
               onChange={handleChange}
             />
-            Admin
+            <span>Admin</span>
           </label>
         </div>
 

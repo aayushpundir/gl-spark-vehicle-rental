@@ -34,14 +34,15 @@ public class VehicleServiceImpl implements VehicleService{
     }
 
     @Override
-    public List<VehicleDTO> getAllVehicles() {
+    public List<VehicleResponse> getAllVehicles() {
 
         List<Vehicle> vehicles = vehicleRepository.findAll();
-        List<VehicleDTO> vehicleDTOs = new ArrayList<>();
+        List<VehicleResponse> vehicleDTOs = new ArrayList<>();
 
         for (Vehicle vehicle : vehicles) {
-            VehicleDTO vehicleDTO = new VehicleDTO();
+            VehicleResponse vehicleDTO = new VehicleResponse();
 
+            vehicleDTO.setId(vehicle.getId());
             vehicleDTO.setBrand(vehicle.getBrand());
             vehicleDTO.setModel(vehicle.getModel());
             vehicleDTO.setPlateNumber(vehicle.getPlateNumber());
@@ -50,6 +51,8 @@ public class VehicleServiceImpl implements VehicleService{
 
             vehicleDTOs.add(vehicleDTO);
         }
+
+        System.out.println(vehicleDTOs);
 
         return vehicleDTOs;
     }

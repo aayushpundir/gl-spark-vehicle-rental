@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Calendar, Car, CreditCard, XCircle, Loader2, CheckCircle2 } from "lucide-react";
+import { Car, CreditCard, XCircle, Loader2, CheckCircle2 } from "lucide-react";
 import "./MyBookings.css";
 
 const MyBookings = () => {

@@ -26,39 +26,60 @@ public class BookingServiceImpl implements BookingService{
     @Override
     @Transactional
     public BookingResponseDTO createBooking(BookingRequestDTO request, String userEmail) {
-        // 1. Call Vehicle Service via Feign to get details
-        VehicleDTO vehicle = vehicleClient.getVehicleById(request.getVehicleId());
+        try {
+            // 1. Fetch Vehicle via Feign
+            VehicleDTO vehicle = vehicleClient.getVehicleById(request.getVehicleId());
+            if (vehicle == null) {
+                throw new RuntimeException("Vehicle not found with ID: " + request.getVehicleId());
+            }
 
-        // 2. Validate availability
-        if (!"AVAILABLE".equalsIgnoreCase(vehicle.getStatus())) {
-            throw new RuntimeException("Vehicle is not available for the selected dates!");
+            // 2. Availability Check
+            if (!"AVAILABLE".equalsIgnoreCase(vehicle.getStatus())) {
+                throw new RuntimeException("Vehicle is already booked or unavailable.");
+            }
+
+            // 3. Date Validation & Duration
+            if (request.getStartDate() == null || request.getEndDate() == null) {
+                throw new RuntimeException("Start and End dates are required.");
+            }
+            long days = ChronoUnit.DAYS.between(request.getStartDate(), request.getEndDate());
+            if (days <= 0) {
+                throw new RuntimeException("End date must be at least one day after start date.");
+            }
+
+            // 4. Amount Calculation (Prevents NullPointerException)
+            if (vehicle.getPricePerDay() == null) {
+                throw new RuntimeException("Vehicle has no price assigned. Check Vehicle Service DB.");
+            }
+            Double totalAmount = days * vehicle.getPricePerDay();
+
+            // 5. Create Entity
+            Booking booking = new Booking();
+            booking.setUserEmail(userEmail);
+            booking.setVehicleId(request.getVehicleId());
+            booking.setStartDate(request.getStartDate());
+            booking.setEndDate(request.getEndDate());
+            booking.setTotalAmount(totalAmount);
+            booking.setStatus("CONFIRMED");
+
+            // 6. Persist to Booking DB
+            Booking savedBooking = bookingRepository.save(booking);
+
+            // 7. Update Vehicle Status via Feign
+            vehicleClient.updateStatus(request.getVehicleId(), "BOOKED");
+
+            // 8. Return mapped response
+            String carName = (vehicle.getBrand() != null ? vehicle.getBrand() : "") + " " +
+                    (vehicle.getModel() != null ? vehicle.getModel() : "Vehicle");
+
+            return mapToResponseDTO(savedBooking, carName.trim());
+
+        } catch (Exception e) {
+            // This forces the error to show in your console log
+            System.err.println("CRITICAL ERROR: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Booking Flow Failed: " + e.getMessage());
         }
-
-        // 3. Calculate rental duration
-        long days = ChronoUnit.DAYS.between(request.getStartDate(), request.getEndDate());
-        if (days <= 0) {
-            throw new RuntimeException("Invalid dates: End date must be after start date.");
-        }
-
-        // 4. Calculate total amount
-        Double totalAmount = days * vehicle.getPricePerDay();
-
-        // 5. Create and save Booking Entity to PostgreSQL
-        Booking booking = new Booking();
-        booking.setUserEmail(userEmail);
-        booking.setVehicleId(request.getVehicleId());
-        booking.setStartDate(request.getStartDate());
-        booking.setEndDate(request.getEndDate());
-        booking.setTotalAmount(totalAmount);
-        booking.setStatus("CONFIRMED");
-
-        Booking savedBooking = bookingRepository.save(booking);
-
-        // 6. Update Vehicle Status to BOOKED in Vehicle Service via Feign
-        vehicleClient.updateStatus(request.getVehicleId(), "BOOKED");
-
-        // 7. Return mapped DTO
-        return mapToResponseDTO(savedBooking, vehicle.getBrand() + " " + vehicle.getModel());
     }
 
     @Override
@@ -93,6 +114,18 @@ public class BookingServiceImpl implements BookingService{
 
         // Make the vehicle AVAILABLE again
         vehicleClient.updateStatus(booking.getVehicleId(), "AVAILABLE");
+    }
+
+    @Override
+    public BookingResponseDTO findBookingById(String userEmail, Long id) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        if (booking == null) {
+            throw new RuntimeException("Booking not found with ID: " + id);
+        }
+
+        return mapToResponseDTO(booking);
     }
 
     private BookingResponseDTO mapToResponseDTO(Booking booking, String vehicleName) {

@@ -25,6 +25,8 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // 1. Specific User Actions (Highest Priority)
+//                        .requestMatchers("/api/test-me").permitAll()
+                                .requestMatchers("/api/bookings/{id}").permitAll()
                         .requestMatchers("/api/bookings/create").hasAnyRole("CUSTOMER", "ADMIN")
                         .requestMatchers("/api/bookings/my-bookings/**").hasAnyRole("CUSTOMER", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/bookings/cancel/**").hasAnyRole("CUSTOMER", "ADMIN")
